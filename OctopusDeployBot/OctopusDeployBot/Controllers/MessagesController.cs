@@ -1,7 +1,12 @@
 ﻿using System.Threading.Tasks;
 using System.Web.Http;
+using Autofac;
+using Microsoft.Bot.Builder.Dialogs;
+using Microsoft.Bot.Builder.Dialogs.Internals;
+using Microsoft.Bot.Builder.FormFlow;
 using Microsoft.Bot.Connector;
-using Microsoft.Bot.Connector.Utilities;
+using OctopusDeployBot.Dialogs;
+using OctopusDeployBot.Forms;
 
 namespace OctopusDeployBot.Controllers
 {
@@ -16,12 +21,9 @@ namespace OctopusDeployBot.Controllers
         {
             if (message.Type == "Message")
             {
-                // calculate something for us to return
-                var length = (message.Text ?? string.Empty).Length;
-
-                // return our reply to the user
-                return message.CreateReplyMessage($"You sent {length} characters");
+                return await Conversation.SendAsync(message, () => new OctopusDialog());
             }
+
             return HandleSystemMessage(message);
         }
 
